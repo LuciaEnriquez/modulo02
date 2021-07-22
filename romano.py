@@ -5,6 +5,31 @@ simbolos = {
     'millares': ['', 'M', 'MM', 'MMM']
 }
 
+digitos_romanos = {
+    'I':1, 'V':5, 'X':10, 'L':50, 'C':100, 'D':500, 'M':1000
+}
+
+def a_numero(cadena):
+    acumulador = 0
+    valor_ant = 0
+    for carcater in cadena:
+        valor = digitos_romanos[carcater]
+        if valor > valor_ant:
+            if valor_ant in (5, 50, 500):
+                raise ValueError("no se pueden restar V, L O D")
+
+            if valor_ant > 0 and valor > 10 * valor_ant:
+                raise ValueError("no se admiten restas entre digitos 10 veces mayores")
+    
+            acumulador -= valor_ant
+            acumulador += valor - valor_ant
+        else:
+            acumulador += valor
+
+        valor_ant = valor
+
+    return acumulador             
+
 def validar(n):
 
 
