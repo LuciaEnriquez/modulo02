@@ -11,9 +11,20 @@ digitos_romanos = {
 
 def a_numero(cadena):
     acumulador = 0
-    valor_ant = 0
+    valor_ant = 1001
+    cuenta_repeticiones = 0
+    cuenta_restas = 0
     for carcater in cadena:
-        valor = digitos_romanos[carcater]
+        valor = digitos_romanos.get(carcater)
+        if not valor:
+            raise ValueError("El mio")
+
+        if valor > valor_ant:
+            if cuenta_restas > 0:
+                raise ValueError("no se pueden realizar restas consecutivas")
+            if cuenta_repeticiones > 0:
+                raise ValueError("no se pueden hacer restas dentro de repeticiones")
+
         if valor > valor_ant:
             if valor_ant in (5, 50, 500):
                 raise ValueError("no se pueden restar V, L O D")
@@ -23,8 +34,21 @@ def a_numero(cadena):
     
             acumulador -= valor_ant
             acumulador += valor - valor_ant
+            cuenta_restas += 1
         else:
             acumulador += valor
+            cuenta_restas = 0
+
+        if valor == valor_ant:
+            if valor in (5, 50, 500):
+                raise ValueError("no se pueden repetir V, L o D")
+
+            cuenta_repeticiones += 1
+            if cuenta_repeticiones == 3:
+                raise ValueError("demasiadas repeticiones de{}".format(caracter))
+        else:
+             cuenta_repeticiones = 0
+             
 
         valor_ant = valor
 
@@ -44,26 +68,12 @@ def a_romano(n):
 
 
     validar(n)
-    c = str(n)
+    c = "{:04d}".format(n)
 
-    unidades = 0
-    decenas = 0
-    centenas = 0
-    millares = 0
-
-    if len(c) >= 1:
-        unidades = int(c[-1])
-
-    if len(c) >= 2:
-        decenas = int(c[-2])
-
-    if len(c) >= 3: 
-        centenas = int(c[-3])
-
-    if len(c) >= 4:
-        millares = int(c[-4])
-
-    componentes = (millares, centenas, decenas, unidades)
+    unidades = int(c[-1])
+    decenas = int(c[-2])
+    centenas = int(c[-3])
+    millares = int(c[-4])
     
     return simbolos['millares'] [millares] + simbolos['centenas'] [centenas] + simbolos['decenas'] [decenas] + simbolos['unidades'] [unidades]
 

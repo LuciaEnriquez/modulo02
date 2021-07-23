@@ -18,4 +18,9 @@ class RomanosTests(unittest.TestCase):
         self.assertEqual(a_numero('IV'), 4)
         self.assertEqual(a_numero('IX'), 9)
         with self.assertRaises(ValueError):
-            a_numero('IL')         
+            a_numero('IL')
+
+    def test_no_mas_de_tres_repeticiones(self):
+        self.assertEqual(a_numero('III'))
+        with self.assertRaises(ValueError):
+            a_numero('IIII')        
